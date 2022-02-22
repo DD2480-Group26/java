@@ -3,9 +3,13 @@ package com.jsoniter;
 import com.jsoniter.any.Any;
 import com.jsoniter.spi.JsonException;
 import com.jsoniter.spi.Slice;
+import com.jsoniter.group26logger.*;
 
 import java.io.IOException;
 import java.math.BigInteger;
+import java.util.Scanner;
+import java.io.*;
+
 
 class IterImpl {
 
@@ -214,12 +218,32 @@ class IterImpl {
         return false;
     }
 
+
     public final static int readStringSlowPath(JsonIterator iter, int j) throws IOException {
+    	int branchId;
+    	String fileName = "logFile.txt";
+        FileWriter logWriter = new FileWriter(fileName, true);
+        BufferedWriter bw = new BufferedWriter(logWriter);
+        String line = "Testing the function readStringSlowPath";
+        if(!FileMethods.fileContains(fileName, line)) {
+        	bw.write(line);
+            bw.newLine();
+            bw.close();
+        }
         try {
             boolean isExpectingLowSurrogate = false;
             for (int i = iter.head; i < iter.tail; ) {
                 int bc = iter.buf[i++];
-                if (bc == '"') {
+                if (bc == '"') { 
+                	//New branch id
+                	branchId = 2;
+                	line = "Branch "+branchId+" tested";
+                    if(!FileMethods.fileContains(fileName, line)) {
+                    	bw = new BufferedWriter(logWriter);
+                    	bw.write(line);
+                        bw.newLine();
+                        bw.close();
+                    }
                     iter.head = i;
                     return j;
                 }
@@ -227,43 +251,178 @@ class IterImpl {
                     bc = iter.buf[i++];
                     switch (bc) {
                         case 'b':
+                        	//New branch id
+                        	branchId = 3;
+                        	line = "Branch "+branchId+" tested";
+                            if(!FileMethods.fileContains(fileName, line)) {
+                            	bw = new BufferedWriter(logWriter);
+                            	bw.write(line);
+                                bw.newLine();
+                                bw.close();
+                            }
                             bc = '\b';
                             break;
                         case 't':
-                            bc = '\t';
+                            bc = '\t'; 
+                          //New branch id
+                        	branchId = 4;
+                        	line = "Branch "+branchId+" tested";
+                            if(!FileMethods.fileContains(fileName, line)) {
+                            	bw = new BufferedWriter(logWriter);
+                            	bw.write(line);
+                                bw.newLine();
+                                bw.close();
+                            }
                             break;
                         case 'n':
                             bc = '\n';
+                          //New branch id
+                        	branchId = 5;
+                        	line = "Branch "+branchId+" tested";
+                            if(!FileMethods.fileContains(fileName, line)) {
+                            	bw = new BufferedWriter(logWriter);
+                            	bw.write(line);
+                                bw.newLine();
+                                bw.close();
+                            }
                             break;
                         case 'f':
                             bc = '\f';
+                          //New branch id
+                        	branchId = 6;
+                        	line = "Branch "+branchId+" tested";
+                            if(!FileMethods.fileContains(fileName, line)) {
+                            	bw = new BufferedWriter(logWriter);
+                            	bw.write(line);
+                                bw.newLine();
+                                bw.close();
+                            }
                             break;
                         case 'r':
+                        	//New branch id
+                        	branchId = 7;
+                        	line = "Branch "+branchId+" tested";
+                            if(!FileMethods.fileContains(fileName, line)) {
+                            	bw = new BufferedWriter(logWriter);
+                            	bw.write(line);
+                                bw.newLine();
+                                bw.close();
+                            }
                             bc = '\r';
                             break;
                         case '"':
                         case '/':
                         case '\\':
+                        	//New branch id: 8
+                        	branchId = 8;
+                        	line = "Branch "+branchId+" tested";
+                            if(!FileMethods.fileContains(fileName, line)) {
+                            	bw = new BufferedWriter(logWriter);
+                            	bw.write(line);
+                                bw.newLine();
+                                bw.close();
+                            }
                             break;
                         case 'u':
+                        	//New branch id: 9
+                        	branchId = 9;
+                        	line = "Branch "+branchId+" tested";
+                            if(!FileMethods.fileContains(fileName, line)) {
+                            	bw = new BufferedWriter(logWriter);
+                            	bw.write(line);
+                                bw.newLine();
+                                bw.close();
+                            }
                             bc = (IterImplString.translateHex(iter.buf[i++]) << 12) +
                                     (IterImplString.translateHex(iter.buf[i++]) << 8) +
                                     (IterImplString.translateHex(iter.buf[i++]) << 4) +
                                     IterImplString.translateHex(iter.buf[i++]);
                             if (Character.isHighSurrogate((char) bc)) {
+                            	//New branch id
+                            	branchId = 10;
+                            	line = "Branch "+branchId+" tested";
+                                if(!FileMethods.fileContains(fileName, line)) {
+                                	bw = new BufferedWriter(logWriter);
+                                	bw.write(line);
+                                    bw.newLine();
+                                    bw.close();
+                                }
                                 if (isExpectingLowSurrogate) {
+                                	//New branch id
+                                	branchId = 11;
+                                	line = "Branch "+branchId+" tested";
+                                    if(!FileMethods.fileContains(fileName, line)) {
+                                    	bw = new BufferedWriter(logWriter);
+                                    	bw.write(line);
+                                        bw.newLine();
+                                        bw.close();
+                                    }
                                     throw new JsonException("invalid surrogate");
                                 } else {
+                                	//New branch id
+                                	branchId = 12;
+                                	line = "Branch "+branchId+" tested";
+                                    if(!FileMethods.fileContains(fileName, line)) {
+                                    	bw = new BufferedWriter(logWriter);
+                                    	bw.write(line);
+                                        bw.newLine();
+                                        bw.close();
+                                    }
                                     isExpectingLowSurrogate = true;
                                 }
                             } else if (Character.isLowSurrogate((char) bc)) {
+                            	//New branch id
+                            	branchId = 13;
+                            	line = "Branch "+branchId+" tested";
+                                if(!FileMethods.fileContains(fileName, line)) {
+                                	bw = new BufferedWriter(logWriter);
+                                	bw.write(line);
+                                    bw.newLine();
+                                    bw.close();
+                                }
                                 if (isExpectingLowSurrogate) {
+                                	//New branch id
+                                	branchId = 14;
+                                	line = "Branch "+branchId+" tested";
+                                    if(!FileMethods.fileContains(fileName, line)) {
+                                    	bw = new BufferedWriter(logWriter);
+                                    	bw.write(line);
+                                        bw.newLine();
+                                        bw.close();
+                                    }
                                     isExpectingLowSurrogate = false;
                                 } else {
+                                	//New branch id
+                                	branchId = 15;
+                                	line = "Branch "+branchId+" tested";
+                                    if(!FileMethods.fileContains(fileName, line)) {
+                                    	bw = new BufferedWriter(logWriter);
+                                    	bw.write(line);
+                                        bw.newLine();
+                                        bw.close();
+                                    }
                                     throw new JsonException("invalid surrogate");
                                 }
                             } else {
+                            	//New branch id
+                            	branchId = 16;
+                            	line = "Branch "+branchId+" tested";
+                                if(!FileMethods.fileContains(fileName, line)) {
+                                	bw = new BufferedWriter(logWriter);
+                                	bw.write(line);
+                                    bw.newLine();
+                                    bw.close();
+                                }
                                 if (isExpectingLowSurrogate) {
+                                	//New branch id
+                                	branchId = 17;
+                                	line = "Branch "+branchId+" tested";
+                                    if(!FileMethods.fileContains(fileName, line)) {
+                                    	bw = new BufferedWriter(logWriter);
+                                    	bw.write(line);
+                                        bw.newLine();
+                                        bw.close();
+                                    }
                                     throw new JsonException("invalid surrogate");
                                 }
                             }
@@ -273,22 +432,94 @@ class IterImpl {
                             throw iter.reportError("readStringSlowPath", "invalid escape character: " + bc);
                     }
                 } else if ((bc & 0x80) != 0) {
+                	//New branch id
+                	branchId = 18;
+                	line = "Branch "+branchId+" tested";
+                    if(!FileMethods.fileContains(fileName, line)) {
+                    	bw = new BufferedWriter(logWriter);
+                    	bw.write(line);
+                        bw.newLine();
+                        bw.close();
+                    }
                     final int u2 = iter.buf[i++];
                     if ((bc & 0xE0) == 0xC0) {
+                    	//New branch id
+                    	branchId = 19;
+                    	line = "Branch "+branchId+" tested";
+                        if(!FileMethods.fileContains(fileName, line)) {
+                        	bw = new BufferedWriter(logWriter);
+                        	bw.write(line);
+                            bw.newLine();
+                            bw.close();
+                        }
                         bc = ((bc & 0x1F) << 6) + (u2 & 0x3F);
                     } else {
+                    	//New branch id
+                    	branchId = 20;
+                    	line = "Branch "+branchId+" tested";
+                        if(!FileMethods.fileContains(fileName, line)) {
+                        	bw = new BufferedWriter(logWriter);
+                        	bw.write(line);
+                            bw.newLine();
+                            bw.close();
+                        }
                         final int u3 = iter.buf[i++];
                         if ((bc & 0xF0) == 0xE0) {
+                        	//New branch id
+                        	branchId = 21;
+                        	line = "Branch "+branchId+" tested";
+                            if(!FileMethods.fileContains(fileName, line)) {
+                            	bw = new BufferedWriter(logWriter);
+                            	bw.write(line);
+                                bw.newLine();
+                                bw.close();
+                            }
                             bc = ((bc & 0x0F) << 12) + ((u2 & 0x3F) << 6) + (u3 & 0x3F);
                         } else {
+                        	//New branch id
+                        	branchId = 22;
+                        	line = "Branch "+branchId+" tested";
+                            if(!FileMethods.fileContains(fileName, line)) {
+                            	bw = new BufferedWriter(logWriter);
+                            	bw.write(line);
+                                bw.newLine();
+                                bw.close();
+                            }
                             final int u4 = iter.buf[i++];
                             if ((bc & 0xF8) == 0xF0) {
+                            	//New branch id
+                            	branchId = 23;
+                            	line = "Branch "+branchId+" tested";
+                                if(!FileMethods.fileContains(fileName, line)) {
+                                	bw = new BufferedWriter(logWriter);
+                                	bw.write(line);
+                                    bw.newLine();
+                                    bw.close();
+                                }
                                 bc = ((bc & 0x07) << 18) + ((u2 & 0x3F) << 12) + ((u3 & 0x3F) << 6) + (u4 & 0x3F);
                             } else {
+                            	//New branch id
+                            	branchId = 24;
+                            	line = "Branch "+branchId+" tested";
+                                if(!FileMethods.fileContains(fileName, line)) {
+                                	bw = new BufferedWriter(logWriter);
+                                	bw.write(line);
+                                    bw.newLine();
+                                    bw.close();
+                                }
                                 throw iter.reportError("readStringSlowPath", "invalid unicode character");
                             }
 
                             if (bc >= 0x10000) {
+                            	//New branch id
+                            	branchId = 25;
+                            	line = "Branch "+branchId+" tested";
+                                if(!FileMethods.fileContains(fileName, line)) {
+                                	bw = new BufferedWriter(logWriter);
+                                	bw.write(line);
+                                    bw.newLine();
+                                    bw.close();
+                                }
                                 // check if valid unicode
                                 if (bc >= 0x110000)
                                     throw iter.reportError("readStringSlowPath", "invalid unicode character");
@@ -296,12 +527,30 @@ class IterImpl {
                                 // split surrogates
                                 final int sup = bc - 0x10000;
                                 if (iter.reusableChars.length == j) {
+                                	//New branch id
+                                	branchId = 26;
+                                	line = "Branch "+branchId+" tested";
+                                    if(!FileMethods.fileContains(fileName, line)) {
+                                    	bw = new BufferedWriter(logWriter);
+                                    	bw.write(line);
+                                        bw.newLine();
+                                        bw.close();
+                                    }
                                     char[] newBuf = new char[iter.reusableChars.length * 2];
                                     System.arraycopy(iter.reusableChars, 0, newBuf, 0, iter.reusableChars.length);
                                     iter.reusableChars = newBuf;
                                 }
                                 iter.reusableChars[j++] = (char) ((sup >>> 10) + 0xd800);
                                 if (iter.reusableChars.length == j) {
+                                	//New branch id
+                                	branchId = 27;
+                                	line = "Branch "+branchId+" tested";
+                                    if(!FileMethods.fileContains(fileName, line)) {
+                                    	bw = new BufferedWriter(logWriter);
+                                    	bw.write(line);
+                                        bw.newLine();
+                                        bw.close();
+                                    }
                                     char[] newBuf = new char[iter.reusableChars.length * 2];
                                     System.arraycopy(iter.reusableChars, 0, newBuf, 0, iter.reusableChars.length);
                                     iter.reusableChars = newBuf;
@@ -313,6 +562,15 @@ class IterImpl {
                     }
                 }
                 if (iter.reusableChars.length == j) {
+                	//New branch id
+                	branchId = 28;
+                	line = "Branch "+branchId+" tested";
+                    if(!FileMethods.fileContains(fileName, line)) {
+                    	bw = new BufferedWriter(logWriter);
+                    	bw.write(line);
+                        bw.newLine();
+                        bw.close();
+                    }
                     char[] newBuf = new char[iter.reusableChars.length * 2];
                     System.arraycopy(iter.reusableChars, 0, newBuf, 0, iter.reusableChars.length);
                     iter.reusableChars = newBuf;
@@ -321,6 +579,7 @@ class IterImpl {
             }
             throw iter.reportError("readStringSlowPath", "incomplete string");
         } catch (IndexOutOfBoundsException e) {
+        	bw.close();
             throw iter.reportError("readString", "incomplete string");
         }
     }
