@@ -109,7 +109,7 @@ class IterImpl {
             throw iter.reportError("skipString", "incomplete string");
         } else {
             iter.head = end;
-        }
+        } 
     }
 
     final static void skipUntilBreak(JsonIterator iter) throws IOException {
@@ -260,7 +260,7 @@ class IterImpl {
                                 bw.newLine();
                                 bw.close();
                             }
-                            bc = '\b';
+                            bc = '\b'; 
                             break;
                         case 't':
                             bc = '\t'; 

@@ -1,0 +1,17 @@
+Testing the function readStringSlowPath
+Branch 18 tested
+Branch 20 tested
+Branch 8 tested
+Branch 28 tested
+Branch 4 tested
+Branch 21 tested
+Branch 22 tested
+Branch 9 tested
+Branch 13 tested
+Branch 10 tested
+Branch 12 tested
+Branch 11 tested
+Branch 2 tested
+Branch 23 tested
+Branch 15 tested
+Branch 25 tested
