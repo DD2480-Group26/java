@@ -213,7 +213,66 @@ class IterImpl {
     public final static boolean loadMore(JsonIterator iter) throws IOException {
         return false;
     }
+    
+  
+    public final static switchCaseContext switchCase(switchCaseContext context) throws IOException {
+    	
+    	switch (context.bc) {
+        case 'b':
+            context.bc = '\b';
+            break;
+        case 't':
+            context.bc = '\t';
+            break;
+        case 'n':
+            context.bc = '\n';
+            break;
+        case 'f':
+            context.bc = '\f';
+            break;
+        case 'r':
+            context.bc = '\r';
+            break;
+        case '"':
+        case '/':
+        case '\\':
+            break;
+        case 'u':
+            context.bc = (IterImplString.translateHex(context.iter.buf[context.i++]) << 12) +
+                    (IterImplString.translateHex(context.iter.buf[context.i++]) << 8) +
+                    (IterImplString.translateHex(context.iter.buf[context.i++]) << 4) +
+                    IterImplString.translateHex(context.iter.buf[context.i++]);
+            if (Character.isHighSurrogate((char) context.bc)) {
+                if (context.isExpectingLowSurrogate) {
+                    throw new JsonException("invalid surrogate");
+                } else {
+                    context.isExpectingLowSurrogate = true;
+                }
+            } else if (Character.isLowSurrogate((char) context.bc)) {
+                if (context.isExpectingLowSurrogate) {
+                    context.isExpectingLowSurrogate = false;
+                } else {
+                    throw new JsonException("invalid surrogate");
+                }
+            } else {
+                if (context.isExpectingLowSurrogate) {
+                    throw new JsonException("invalid surrogate");
+                }
+            }
+            break;
 
+        default:
+            throw context.iter.reportError("readStringSlowPath", "invalid escape character: " + context.bc);
+    	
+        }
+    	return context;
+    }
+    
+    
+    //This function is a huge for loop. It is a bit difficult to divide it into smaller functions 
+    //In order to do that we can put the switch case in another function. We first need to save the 
+    //context using the class switchCaseContext, then we execute the switch case code and finally
+    //We update the variables in the main function with the context values.
     public final static int readStringSlowPath(JsonIterator iter, int j) throws IOException {
         try {
             boolean isExpectingLowSurrogate = false;
@@ -225,53 +284,13 @@ class IterImpl {
                 }
                 if (bc == '\\') {
                     bc = iter.buf[i++];
-                    switch (bc) {
-                        case 'b':
-                            bc = '\b';
-                            break;
-                        case 't':
-                            bc = '\t';
-                            break;
-                        case 'n':
-                            bc = '\n';
-                            break;
-                        case 'f':
-                            bc = '\f';
-                            break;
-                        case 'r':
-                            bc = '\r';
-                            break;
-                        case '"':
-                        case '/':
-                        case '\\':
-                            break;
-                        case 'u':
-                            bc = (IterImplString.translateHex(iter.buf[i++]) << 12) +
-                                    (IterImplString.translateHex(iter.buf[i++]) << 8) +
-                                    (IterImplString.translateHex(iter.buf[i++]) << 4) +
-                                    IterImplString.translateHex(iter.buf[i++]);
-                            if (Character.isHighSurrogate((char) bc)) {
-                                if (isExpectingLowSurrogate) {
-                                    throw new JsonException("invalid surrogate");
-                                } else {
-                                    isExpectingLowSurrogate = true;
-                                }
-                            } else if (Character.isLowSurrogate((char) bc)) {
-                                if (isExpectingLowSurrogate) {
-                                    isExpectingLowSurrogate = false;
-                                } else {
-                                    throw new JsonException("invalid surrogate");
-                                }
-                            } else {
-                                if (isExpectingLowSurrogate) {
-                                    throw new JsonException("invalid surrogate");
-                                }
-                            }
-                            break;
-
-                        default:
-                            throw iter.reportError("readStringSlowPath", "invalid escape character: " + bc);
-                    }
+                    switchCaseContext context = new switchCaseContext(bc, iter, i, j, isExpectingLowSurrogate);
+                    context  = IterImpl.switchCase(context);
+                    bc = context.bc;
+                    i = context.i;
+                    j = context.j;
+                    isExpectingLowSurrogate = context.isExpectingLowSurrogate;
+                    iter = context.iter;
                 } else if ((bc & 0x80) != 0) {
                     final int u2 = iter.buf[i++];
                     if ((bc & 0xE0) == 0xC0) {
@@ -488,4 +507,6 @@ class IterImpl {
             return IterImplForStreaming.readDoubleSlowPath(iter);
         }
     }
+   
+    
 }
