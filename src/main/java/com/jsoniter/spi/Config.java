@@ -400,7 +400,7 @@ public class Config extends EmptyExtension {
         
         // code for branch coverage
     	BranchCoverage.createFile("updateBindings");
-        if (desc.allBindings() == null) {
+        if (desc.allBindings() == null || desc.allBindings().size() == 0) {
             BranchCoverage.addBranch(1);    // branch 1
         }
         for (Binding binding : desc.allBindings()) {
