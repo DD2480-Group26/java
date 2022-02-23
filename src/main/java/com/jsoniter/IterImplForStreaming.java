@@ -3,6 +3,11 @@ package com.jsoniter;
 import com.jsoniter.any.Any;
 import com.jsoniter.spi.JsonException;
 import com.jsoniter.spi.Slice;
+import com.jsoniter.group26logger.*;
+import java.util.Scanner;
+import java.io.*;
+import java.util.Hashtable;
+
 
 import java.io.IOException;
 
@@ -568,12 +573,72 @@ class IterImplForStreaming {
         boolean dotFound;
     }
 
+    // if not already written, writes to to file that branch `branchId` has been covered. branchCovered( );
+    private static void branchCovered(int branchId) {
+        String fileName = "readNumberBranchCoverage.txt";
+        try {
+            String line = "Branch " + branchId + " covered";
+            FileWriter logWriter = new FileWriter(fileName, true);
+            BufferedWriter bw = new BufferedWriter(logWriter);
+            if(!FileMethods.fileContains(fileName, line)) {
+                bw.write(line);
+                bw.newLine();
+                bw.close();
+            }
+        }
+        catch (Exception e) {
+            System.out.println(e.getStackTrace());
+        }
+    }
+
+    public static int byteToBranchID(byte c){
+        switch (c) {
+            case '.':
+                return 4;
+            case 'e':
+                return 5;
+            case 'E':
+                return 6;
+            case '-':
+                return 7;
+            case '+':
+                return 8;
+            case '0':
+                return 9;
+            case '1':
+                return 10;
+            case '2':
+                return 11;
+            case '3':
+                return 12;
+            case '4':
+                return 13;
+            case '5':
+                return 14;
+            case '6':
+                return 15;
+            case '7':
+                return 16;
+            case '8':
+                return 17;
+            case '9':
+                return 18;
+            default:
+                return 40;
+        }
+
+    }
+
+
     public static final numberChars readNumber(final JsonIterator iter) throws IOException {
         int j = 0;
         boolean dotFound = false;
         for (; ; ) {
+            branchCovered( 1);
             for (int i = iter.head; i < iter.tail; i++) {
+                branchCovered( 2);
                 if (j == iter.reusableChars.length) {
+                    branchCovered(3 );
                     char[] newBuf = new char[iter.reusableChars.length * 2];
                     System.arraycopy(iter.reusableChars, 0, newBuf, 0, iter.reusableChars.length);
                     iter.reusableChars = newBuf;
@@ -584,6 +649,7 @@ class IterImplForStreaming {
                     case 'e':
                     case 'E':
                         dotFound = true;
+                        branchCovered(byteToBranchID(c) );
                         // fallthrough
                     case '-':
                     case '+':
@@ -597,9 +663,11 @@ class IterImplForStreaming {
                     case '7':
                     case '8':
                     case '9':
+                        branchCovered(byteToBranchID(c));
                         iter.reusableChars[j++] = (char) c;
                         break;
                     default:
+                        branchCovered(19 );
                         iter.head = i;
                         numberChars numberChars = new numberChars();
                         numberChars.chars = iter.reusableChars;
@@ -609,6 +677,7 @@ class IterImplForStreaming {
                 }
             }
             if (!IterImpl.loadMore(iter)) {
+                branchCovered( 20);
                 iter.head = iter.tail;
                 numberChars numberChars = new numberChars();
                 numberChars.chars = iter.reusableChars;

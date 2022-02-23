@@ -80,6 +80,19 @@
             <version>1.20</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>net.sourceforge.cobertura</groupId>
+            <artifactId>cobertura</artifactId>
+            <version>2.1.1</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.sun</groupId>
+            <artifactId>tools</artifactId>
+            <version>1.6</version>
+            <scope>system</scope>
+            <systemPath>/Library/Java/JavaVirtualMachines/adoptopenjdk-8.jdk/Contents/Home/lib/tools.jar</systemPath>
+        </dependency>
     </dependencies>
 
     <build>
@@ -121,8 +134,8 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.7.0</version>
                 <configuration>
-                    <source>1.6</source>
-                    <target>1.6</target>
+                    <source>1.7</source>
+                    <target>1.7</target>
                     <encoding>UTF-8</encoding>
                 </configuration>
             </plugin>
