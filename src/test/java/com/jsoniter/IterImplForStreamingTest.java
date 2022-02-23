@@ -19,6 +19,14 @@ public class IterImplForStreamingTest extends TestCase {
 		assertEquals(maxDouble, number);
 	}
 
+	public void testReadMoreThan32BitNumber() throws Exception {
+		String largeNumber = "999999999999999999999999999999999999";
+		JsonIterator iter = JsonIterator.parse("999999999999999999999999999999999999");
+		IterImplForStreaming.numberChars numberChars = IterImplForStreaming.readNumber(iter);
+		String number = new String(numberChars.chars, 0, numberChars.charsLength);
+		assertEquals(largeNumber, number);
+	}
+
 	@Category(StreamingCategory.class)
 	public void testLoadMore() throws IOException {
 		final String originalContent = "1234567890";
