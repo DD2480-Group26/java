@@ -24,6 +24,7 @@ public class IterImplForStreamingTest extends TestCase {
 		JsonIterator iter = JsonIterator.parse("999999999999999999999999999999999999");
 		IterImplForStreaming.numberChars numberChars = IterImplForStreaming.readNumber(iter);
 		String number = new String(numberChars.chars, 0, numberChars.charsLength);
+		// Reading numbers containing more than 32 symbols successfully.
 		assertEquals(largeNumber, number);
 	}
 
@@ -32,7 +33,26 @@ public class IterImplForStreamingTest extends TestCase {
 		JsonIterator iter = JsonIterator.parse("");
 		IterImplForStreaming.numberChars numberChars = IterImplForStreaming.readNumber(iter);
 		String number = new String(numberChars.chars, 0, numberChars.charsLength);
+		// Reading empty strings as numbers should give an empty char array.
 		assertEquals(emptyNumber, number);
+	}
+
+	public void testNegativeFloat() throws Exception {
+		String negativeFloat = "-128989883.4";
+		JsonIterator iter = JsonIterator.parse("-128989883.4");
+		IterImplForStreaming.numberChars numberChars = IterImplForStreaming.readNumber(iter);
+		String number = new String(numberChars.chars, 0, numberChars.charsLength);
+		// Reading negative floating numbers successfully.
+		assertEquals(negativeFloat, number);
+	}
+
+	public void testParseEndOnNotAllowedChar() throws Exception {
+		String numberContainingNowAllowedChar = "12a59121";
+		JsonIterator iter = JsonIterator.parse("12a59121");
+		IterImplForStreaming.numberChars numberChars = IterImplForStreaming.readNumber(iter);
+		String number = new String(numberChars.chars, 0, numberChars.charsLength);
+		// Parsing number containing not allowed char should end parse.
+		assertFalse(numberContainingNowAllowedChar.equals(number));
 	}
 
 	@Category(StreamingCategory.class)
