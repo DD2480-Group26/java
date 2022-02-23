@@ -18,16 +18,18 @@ public class Config extends EmptyExtension {
     private static volatile Map<String, Config> configs = new HashMap<String, Config>();
     private volatile Map<Type, String> decoderCacheKeys = new HashMap<Type, String>();
     private volatile Map<Type, String> encoderCacheKeys = new HashMap<Type, String>();
-    private final static Map<Class, OmitValue> primitiveOmitValues = new HashMap<Class, OmitValue>() {{
-        put(boolean.class, new OmitValue.False());
-        put(char.class, new OmitValue.ZeroChar());
-        put(byte.class, new OmitValue.ZeroByte());
-        put(short.class, new OmitValue.ZeroShort());
-        put(int.class, new OmitValue.ZeroInt());
-        put(long.class, new OmitValue.ZeroLong());
-        put(float.class, new OmitValue.ZeroFloat());
-        put(double.class, new OmitValue.ZeroDouble());
-    }};
+    private final static Map<Class, OmitValue> primitiveOmitValues = new HashMap<Class, OmitValue>() {
+        {
+            put(boolean.class, new OmitValue.False());
+            put(char.class, new OmitValue.ZeroChar());
+            put(byte.class, new OmitValue.ZeroByte());
+            put(short.class, new OmitValue.ZeroShort());
+            put(int.class, new OmitValue.ZeroInt());
+            put(long.class, new OmitValue.ZeroLong());
+            put(float.class, new OmitValue.ZeroFloat());
+            put(double.class, new OmitValue.ZeroDouble());
+        }
+    };
 
     protected Config(String configName, Builder builder) {
         this.configName = configName;
@@ -175,15 +177,21 @@ public class Config extends EmptyExtension {
 
         @Override
         public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
+            if (this == o)
+                return true;
+            if (o == null || getClass() != o.getClass())
+                return false;
 
             Builder builder = (Builder) o;
 
-            if (indentionStep != builder.indentionStep) return false;
-            if (escapeUnicode != builder.escapeUnicode) return false;
-            if (decodingMode != builder.decodingMode) return false;
-            if (omitDefaultValue != builder.omitDefaultValue) return false;
+            if (indentionStep != builder.indentionStep)
+                return false;
+            if (escapeUnicode != builder.escapeUnicode)
+                return false;
+            if (decodingMode != builder.decodingMode)
+                return false;
+            if (omitDefaultValue != builder.omitDefaultValue)
+                return false;
             return encodingMode == builder.encodingMode;
         }
 
@@ -231,7 +239,7 @@ public class Config extends EmptyExtension {
             for (String fieldName : jsonObject.unknownPropertiesWhitelist()) {
                 Binding binding = new Binding(desc.classInfo, desc.lookup, Object.class);
                 binding.name = fieldName;
-                binding.fromNames = new String[]{binding.name};
+                binding.fromNames = new String[] { binding.name };
                 binding.toNames = new String[0];
                 binding.shouldSkip = true;
                 desc.fields.add(binding);
@@ -239,7 +247,7 @@ public class Config extends EmptyExtension {
             for (String fieldName : jsonObject.unknownPropertiesBlacklist()) {
                 Binding binding = new Binding(desc.classInfo, desc.lookup, Object.class);
                 binding.name = fieldName;
-                binding.fromNames = new String[]{binding.name};
+                binding.fromNames = new String[] { binding.name };
                 binding.toNames = new String[0];
                 binding.asExtraWhenPresent = true;
                 desc.fields.add(binding);
@@ -282,7 +290,7 @@ public class Config extends EmptyExtension {
             Annotation[][] annotations = method.getParameterAnnotations();
             String[] paramNames = getParamNames(method, annotations.length);
             Iterator<Binding> iter = desc.setters.iterator();
-            while(iter.hasNext()) {
+            while (iter.hasNext()) {
                 if (method.equals(iter.next().method)) {
                     iter.remove();
                 }
@@ -300,8 +308,8 @@ public class Config extends EmptyExtension {
                     if (binding.name == null || binding.name.length() == 0) {
                         binding.name = paramNames[i];
                     }
-                    binding.fromNames = new String[]{binding.name};
-                    binding.toNames = new String[]{binding.name};
+                    binding.fromNames = new String[] { binding.name };
+                    binding.toNames = new String[] { binding.name };
                     binding.annotations = paramAnnotations;
                     wrapper.parameters.add(binding);
                 }
@@ -355,8 +363,8 @@ public class Config extends EmptyExtension {
                 if (binding.name == null || binding.name.length() == 0) {
                     binding.name = paramNames[i];
                 }
-                binding.fromNames = new String[]{binding.name};
-                binding.toNames = new String[]{binding.name};
+                binding.fromNames = new String[] { binding.name };
+                binding.toNames = new String[] { binding.name };
                 binding.annotations = paramAnnotations;
                 desc.ctor.parameters.add(binding);
             }
@@ -387,8 +395,8 @@ public class Config extends EmptyExtension {
                 if (binding.name == null || binding.name.length() == 0) {
                     binding.name = paramNames[i];
                 }
-                binding.fromNames = new String[]{binding.name};
-                binding.toNames = new String[]{binding.name};
+                binding.fromNames = new String[] { binding.name };
+                binding.toNames = new String[] { binding.name };
                 binding.annotations = paramAnnotations;
                 desc.ctor.parameters.add(binding);
             }
@@ -397,108 +405,174 @@ public class Config extends EmptyExtension {
 
     private void updateBindings(ClassDescriptor desc) {
         boolean globalOmitDefault = JsoniterSpi.getCurrentConfig().omitDefaultValue();
-        
+
         // code for branch coverage
-    	BranchCoverage.createFile("updateBindings");
+        BranchCoverage.createFile("updateBindings");
         if (desc.allBindings() == null || desc.allBindings().size() == 0) {
-            BranchCoverage.addBranch(1);    // branch 1
+            BranchCoverage.addBranch(1); // branch 1
         }
         for (Binding binding : desc.allBindings()) {
-            boolean annotated = false;
-            JsonIgnore jsonIgnore = getJsonIgnore(binding.annotations);
-            if (jsonIgnore != null) {
-                annotated = true;
-                if (jsonIgnore.ignoreDecoding()) {
-                    BranchCoverage.addBranch(2);    // branch 2
-                    binding.fromNames = new String[0];
-                } else{
-                    BranchCoverage.addBranch(3);    // branch 3
-                }
-                if (jsonIgnore.ignoreEncoding()) {
-                    BranchCoverage.addBranch(4);    // branch 4
-                    binding.toNames = new String[0];
-                } else {
-                    BranchCoverage.addBranch(5);    // branch 5
-                }
-            } else {
-                BranchCoverage.addBranch(6);    // branch 6
-            }
-            // map JsonUnwrapper is not getter
-            JsonUnwrapper jsonUnwrapper = getJsonUnwrapper(binding.annotations);
-            if (jsonUnwrapper != null) {
-                BranchCoverage.addBranch(7);    // branch 7
-                annotated = true;
-                binding.fromNames = new String[0];
-                binding.toNames = new String[0];
-            } else {
-                BranchCoverage.addBranch(8);    // branch 8
-            }
+            boolean annotated = jsonIgnoreIf(binding);
+            annotated = jsonUnwrapperIf(binding, annotated);
             if (globalOmitDefault) {
-                BranchCoverage.addBranch(9);    // brach 9
+                BranchCoverage.addBranch(9); // brach 9
                 binding.defaultValueToOmit = createOmitValue(binding.valueType);
             } else {
-                BranchCoverage.addBranch(10);    // branch 10
+                BranchCoverage.addBranch(10); // branch 10
             }
-            JsonProperty jsonProperty = getJsonProperty(binding.annotations);
-            if (jsonProperty != null) {
-                BranchCoverage.addBranch(11);    // branch 11
-                annotated = true;
-                updateBindingWithJsonProperty(binding, jsonProperty);
-            } else {
-                BranchCoverage.addBranch(12);    // branch 12
-            }
-            if (getAnnotation(binding.annotations, JsonMissingProperties.class) != null) {
-                BranchCoverage.addBranch(13);    // branch 13
-                annotated = true;
-                // this binding will not bind from json
-                // instead it will be set by jsoniter with missing property names
-                binding.fromNames = new String[0];
-                desc.onMissingProperties = binding;
-            } else {
-                BranchCoverage.addBranch(14);    // branch 14
-            }
-            if (getAnnotation(binding.annotations, JsonExtraProperties.class) != null) {
-                BranchCoverage.addBranch(15);    // branch 15
-                annotated = true;
-                // this binding will not bind from json
-                // instead it will be set by jsoniter with extra properties
-                binding.fromNames = new String[0];
-                desc.onExtraProperties = binding;
-            } else {
-                BranchCoverage.addBranch(16);    // branch 16
-            }
+            annotated = jsonPropertyIf(binding, annotated);
+            annotated = annotationIf(binding, annotated, desc);
             if (annotated && binding.field != null) {
-                if (desc.setters != null) {
-                    for (Binding setter : desc.setters) { // not adding branch for for-loop due to previous if statement
-                        if (binding.field.getName().equals(setter.name)) {
-                            BranchCoverage.addBranch(17);    // branch 17
-                            setter.fromNames = new String[0];
-                            setter.toNames = new String[0];
-                        } else {
-                            BranchCoverage.addBranch(18);    // branch 18
-                        }
-                    }
-                } else {
-                    BranchCoverage.addBranch(19);    // branch 19
-                }
-                if (desc.getters != null) {
-                    for (Binding getter : desc.getters) {   // not adding branch for for-loop due to previous if statement
-                        if (binding.field.getName().equals(getter.name)) {
-                            BranchCoverage.addBranch(20);    // branch 20
-                            getter.fromNames = new String[0];
-                            getter.toNames = new String[0];
-                        } else {
-                            BranchCoverage.addBranch(21);    // branch 21
-                        }
-                    }
-                } else {
-                    BranchCoverage.addBranch(22);    // branch 22
-                }
+                setSetterNames(binding, desc);
+                setGetterNames(binding, desc);
             } else {
-                BranchCoverage.addBranch(23);    // branch 23
+                BranchCoverage.addBranch(23); // branch 23
             }
         }
         BranchCoverage.updateLogFile();
+    }
+
+    /**
+     * set Binding's fromNames and/or fromNames based on the JsonIngore object
+     * created from binding's annotations value. init the annotated value.
+     * @param binding a Binding object
+     * @return boolean value for annotated
+     */
+    private boolean jsonIgnoreIf(Binding binding) {
+        JsonIgnore jsonIgnore = getJsonIgnore(binding.annotations);
+        boolean annotated = false;
+        if (jsonIgnore != null) {
+            annotated = true;
+            if (jsonIgnore.ignoreDecoding()) {
+                BranchCoverage.addBranch(2); // branch 2
+                binding.fromNames = new String[0];
+            } else {
+                BranchCoverage.addBranch(3); // branch 3
+            }
+            if (jsonIgnore.ignoreEncoding()) {
+                BranchCoverage.addBranch(4); // branch 4
+                binding.toNames = new String[0];
+            } else {
+                BranchCoverage.addBranch(5); // branch 5
+            }
+        } else {
+            BranchCoverage.addBranch(6); // branch 6
+        }
+        return annotated;
+    }
+
+    /**
+     * set Binding's fromNames and/or fromNames based on the JsonUnwrapper object
+     * created from binding's annotations value. Change the annotated value.
+     * @param binding   a Binding object
+     * @param annotated boolean value for annotated
+     * @return new boolean value for annotated
+     */
+    private boolean jsonUnwrapperIf(Binding binding, boolean annotated) {
+        // map JsonUnwrapper is not getter
+        JsonUnwrapper jsonUnwrapper = getJsonUnwrapper(binding.annotations);
+        if (jsonUnwrapper != null) {
+            BranchCoverage.addBranch(7); // branch 7
+            annotated = true;
+            binding.fromNames = new String[0];
+            binding.toNames = new String[0];
+        } else {
+            BranchCoverage.addBranch(8); // branch 8
+        }
+        return annotated;
+    }
+
+    /**
+     * set update the binding with the JsonProperty object created from binding's 
+     * annotations value. Change the annotated value.
+     * @param binding   a Binding object
+     * @param annotated boolean value for annotated
+     * @return new boolean value for annotated
+     */
+    private boolean jsonPropertyIf(Binding binding, boolean annotated) {
+        JsonProperty jsonProperty = getJsonProperty(binding.annotations);
+        if (jsonProperty != null) {
+            BranchCoverage.addBranch(11); // branch 11
+            annotated = true;
+            updateBindingWithJsonProperty(binding, jsonProperty);
+        } else {
+            BranchCoverage.addBranch(12); // branch 12
+        }
+        return annotated;
+    }
+
+    /**
+     * set binding.fromNames and/or desc.onMissingProperties based on binding's 
+     * annotations. Change the annotated value.
+     * @param binding   a Binding object
+     * @param annotated boolean value for annotated
+     * @param desc      ClassDescripter object holding information about the class
+     * @return new boolean value for annotated
+     */
+    private boolean annotationIf(Binding binding, boolean annotated, ClassDescriptor desc) {
+        if (getAnnotation(binding.annotations, JsonMissingProperties.class) != null) {
+            BranchCoverage.addBranch(13); // branch 13
+            annotated = true;
+            // this binding will not bind from json
+            // instead it will be set by jsoniter with missing property names
+            binding.fromNames = new String[0];
+            desc.onMissingProperties = binding;
+        } else {
+            BranchCoverage.addBranch(14); // branch 14
+        }
+        if (getAnnotation(binding.annotations, JsonExtraProperties.class) != null) {
+            BranchCoverage.addBranch(15); // branch 15
+            annotated = true;
+            // this binding will not bind from json
+            // instead it will be set by jsoniter with extra properties
+            binding.fromNames = new String[0];
+            desc.onExtraProperties = binding;
+        } else {
+            BranchCoverage.addBranch(16); // branch 16
+        }
+        return annotated;
+    }
+
+    /**
+     * set each setter's formNames and toNames values based on the setter's current name 
+     * @param binding   a Binding object
+     * @param desc      ClassDescripter object holding information about the class
+     */
+    private void setSetterNames(Binding binding, ClassDescriptor desc) {
+        if (desc.setters != null) {
+            for (Binding setter : desc.setters) { // not adding branch for for-loop due to previous if statement
+                if (binding.field.getName().equals(setter.name)) {
+                    BranchCoverage.addBranch(17); // branch 17
+                    setter.fromNames = new String[0];
+                    setter.toNames = new String[0];
+                } else {
+                    BranchCoverage.addBranch(18); // branch 18
+                }
+            }
+        } else {
+            BranchCoverage.addBranch(19); // branch 19
+        }
+    }
+
+    /**
+     * set each getter's formNames and toNames values based on the getter's current name 
+     * @param binding   a Binding object
+     * @param desc      ClassDescripter object holding information about the class
+     */
+    private void setGetterNames(Binding binding, ClassDescriptor desc) {
+        if (desc.getters != null) {
+            for (Binding getter : desc.getters) { // not adding branch for for-loop due to previous if statement
+                if (binding.field.getName().equals(getter.name)) {
+                    BranchCoverage.addBranch(20); // branch 20
+                    getter.fromNames = new String[0];
+                    getter.toNames = new String[0];
+                } else {
+                    BranchCoverage.addBranch(21); // branch 21
+                }
+            }
+        } else {
+            BranchCoverage.addBranch(22); // branch 22
+        }
     }
 
     private void updateBindingWithJsonProperty(Binding binding, JsonProperty jsonProperty) {
@@ -514,8 +588,8 @@ public class Config extends EmptyExtension {
             if (binding.name == null) {
                 binding.name = altName;
             }
-            binding.fromNames = new String[]{altName};
-            binding.toNames = new String[]{altName};
+            binding.fromNames = new String[] { altName };
+            binding.toNames = new String[] { altName };
         }
         if (jsonProperty.from().length > 0) {
             binding.fromNames = jsonProperty.from();
