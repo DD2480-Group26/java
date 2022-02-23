@@ -192,13 +192,63 @@ public class TestGson extends TestCase {
         assertEquals("1", str);
     }
 
-    public void test_bool_as_string() {
+    // added test
+    public void test_int_as_int() {
+        Gson gson = new Gson();
+        int a = gson.fromJson("1", int.class);
+        assertEquals(1, a);
+        GsonCompatibilityMode config = new GsonCompatibilityMode.Builder().build();
+        a = JsonIterator.deserialize(config, "1", int.class);
+        assertEquals(1, a);
+    }
+
+    // added test
+    public void test_double_as_double() {
+        Gson gson = new Gson();
+        double d = gson.fromJson("1.0", double.class);
+        assertEquals(1.0, d);
+        GsonCompatibilityMode config = new GsonCompatibilityMode.Builder().build();
+        d = JsonIterator.deserialize(config, "1.0", double.class);
+        assertEquals(1.0, d);
+    }
+
+    // added test
+    public void test_long_as_long() {
+        Gson gson = new Gson();
+        long l = gson.fromJson("1", long.class);
+        assertEquals(1, l);
+        GsonCompatibilityMode config = new GsonCompatibilityMode.Builder().build();
+        l = JsonIterator.deserialize(config, "1", long.class);
+        assertEquals(1, l);
+    }
+
+    public void test_bool_as_string_true() {
         Gson gson = new Gson();
         String str = gson.fromJson("true", String.class);
         assertEquals("true", str);
         GsonCompatibilityMode config = new GsonCompatibilityMode.Builder().build();
         str = JsonIterator.deserialize(config, "true", String.class);
         assertEquals("true", str);
+    }
+
+    // added test. checks false condition on line 383 in createDecoder function.
+    public void test_bool_as_string_false() {
+        Gson gson = new Gson();
+        String str = gson.fromJson("false", String.class);
+        assertEquals("false", str);
+        GsonCompatibilityMode config = new GsonCompatibilityMode.Builder().build();
+        str = JsonIterator.deserialize(config, "false", String.class);
+        assertEquals("false", str);
+    }
+
+    // added test
+    public void test_bool_as_bool() {
+        Gson gson = new Gson();
+        boolean b = gson.fromJson("true", boolean.class);
+        assertEquals(true, b);
+        GsonCompatibilityMode config = new GsonCompatibilityMode.Builder().build();
+        b = JsonIterator.deserialize(config, "true", boolean.class);
+        assertEquals(true, b);
     }
 
     public static class TestObject6 {
@@ -264,5 +314,19 @@ public class TestGson extends TestCase {
         GsonCompatibilityMode config = new GsonCompatibilityMode.Builder().build();
         obj = JsonIterator.deserialize(config, "{\"field\":null}", TestObject10.class);
         assertEquals(0.0d, obj.field);
+    }
+
+    public static class TestObject11 {
+        public String field;
+    }
+
+    // added test
+    public void test_null_as_String() {
+        Gson gson = new Gson();
+        TestObject11 obj = gson.fromJson("{\"field\":null}", TestObject11.class);
+        assertEquals(null, obj.field);
+        GsonCompatibilityMode config = new GsonCompatibilityMode.Builder().build();
+        obj = JsonIterator.deserialize(config, "{\"field\":null}", TestObject11.class);
+        assertEquals(null, obj.field);
     }
 }
