@@ -27,6 +27,14 @@ public class IterImplForStreamingTest extends TestCase {
 		assertEquals(largeNumber, number);
 	}
 
+	public void testEmptyNumber() throws Exception {
+		String emptyNumber = "";
+		JsonIterator iter = JsonIterator.parse("");
+		IterImplForStreaming.numberChars numberChars = IterImplForStreaming.readNumber(iter);
+		String number = new String(numberChars.chars, 0, numberChars.charsLength);
+		assertEquals(emptyNumber, number);
+	}
+
 	@Category(StreamingCategory.class)
 	public void testLoadMore() throws IOException {
 		final String originalContent = "1234567890";
