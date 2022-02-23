@@ -12,8 +12,8 @@ import java.util.HashMap;
 public class BranchCoverage {
     private static String fileName = "logFile.txt";
     private static boolean created = false;
-    private static int branchNum = 23;
     private static int[] branchCounters = new int[branchNum];
+    private static int branchNum = 23;
     private static FileWriter logWriter;
 
     /**
@@ -36,10 +36,17 @@ public class BranchCoverage {
         }
     }
 
+    /**
+     * add one to the counter for corresponding branchID
+     * @param branchId integer for branchId
+     */
     public static void addBranch(int branchId) {
         branchCounters[branchId-1]++;
     }
 
+    /**
+     * update the logFile with the current branchCounter
+     */
     public static void updateLogFile() {
         try {
             String[] content = FileMethods.fileToStrArray(fileName);

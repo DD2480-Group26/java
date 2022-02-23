@@ -396,10 +396,10 @@ public class Config extends EmptyExtension {
     }
 
     private void updateBindings(ClassDescriptor desc) {
-    	BranchCoverage.createFile("updateBindings"); // for branch coverage
-
         boolean globalOmitDefault = JsoniterSpi.getCurrentConfig().omitDefaultValue();
+        
         // code for branch coverage
+    	BranchCoverage.createFile("updateBindings");
         if (desc.allBindings() == null) {
             BranchCoverage.addBranch(1);    // branch 1
         }
