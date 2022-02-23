@@ -4,9 +4,10 @@ import com.jsoniter.any.Any;
 import com.jsoniter.spi.JsonException;
 import com.jsoniter.spi.Slice;
 import com.jsoniter.group26logger.*;
-import java.util.Scanner;
+
+import java.util.List;
+import java.util.*;
 import java.io.*;
-import java.util.Hashtable;
 
 
 import java.io.IOException;
@@ -644,40 +645,26 @@ class IterImplForStreaming {
                     iter.reusableChars = newBuf;
                 }
                 byte c = iter.buf[i];
-                switch (c) {
-                    case '.':
-                    case 'e':
-                    case 'E':
-                        dotFound = true;
-                        branchCovered(byteToBranchID(c) );
-                        // fallthrough
-                    case '-':
-                    case '+':
-                    case '0':
-                    case '1':
-                    case '2':
-                    case '3':
-                    case '4':
-                    case '5':
-                    case '6':
-                    case '7':
-                    case '8':
-                    case '9':
-                        branchCovered(byteToBranchID(c));
-                        iter.reusableChars[j++] = (char) c;
-                        break;
-                    default:
-                        branchCovered(19 );
-                        iter.head = i;
-                        numberChars numberChars = new numberChars();
-                        numberChars.chars = iter.reusableChars;
-                        numberChars.charsLength = j;
-                        numberChars.dotFound = dotFound;
-                        return numberChars;
+                if (".eE".indexOf(c) != -1) {
+                    dotFound = true;
+                    branchCovered(4 );
+                    iter.reusableChars[j++] = (char) c;
+
+                }else if("-+0123456789".indexOf(c) != -1){
+                    branchCovered(5 );
+                    iter.reusableChars[j++] = (char) c;
+                }else{
+                    branchCovered(6 );
+                    iter.head = i;
+                    numberChars numberChars = new numberChars();
+                    numberChars.chars = iter.reusableChars;
+                    numberChars.charsLength = j;
+                    numberChars.dotFound = dotFound;
+                    return numberChars;
                 }
             }
             if (!IterImpl.loadMore(iter)) {
-                branchCovered( 20);
+                branchCovered(7 );
                 iter.head = iter.tail;
                 numberChars numberChars = new numberChars();
                 numberChars.chars = iter.reusableChars;
