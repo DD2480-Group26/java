@@ -9,3 +9,5 @@
 /android-demo/gradlew
 /android-demo/gradle
 /android-demo/gradlew.bat
+
+createDecoderBranchCoverage.txt
