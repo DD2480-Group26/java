@@ -1,5 +1,6 @@
 package com.jsoniter;
 
+import com.jsoniter.spi.OmitValue;
 import com.jsoniter.spi.OmitValue.*;
 import junit.framework.TestCase;
 
@@ -133,5 +134,16 @@ public class TestOmitValue extends TestCase {
     
         // Assert result
         assertEquals(false, retval);
+    }
+
+    public void testParse_void(){
+
+
+        String defaultValueToOmit = "void";
+
+        final OmitValue retval = Parsed.parse(null,defaultValueToOmit);
+
+
+        assertEquals(null, retval);
     }
 }
