@@ -349,139 +349,167 @@ public class GsonCompatibilityMode extends Config {
             System.out.println(e.getStackTrace());
         }
     }
+
+    private Decoder createDecoderDate() {
+        return new Decoder() {
+            @Override
+            public Object decode(JsonIterator iter) throws IOException {
+                DateFormat dateFormat = builder().dateFormat.get();
+                try {
+                    branchCovered(3, "createDecoderBranchCoverage.txt");
+                    String input = iter.readString();
+                    return dateFormat.parse(input);
+                } catch (ParseException e) {
+                    throw new JsonException(e);
+                }
+            }
+        };
+    }
+
+    private Decoder createDecoderString() {
+        return new Decoder() {
+            @Override
+            public Object decode(JsonIterator iter) throws IOException {
+                ValueType valueType = iter.whatIsNext();
+                if (valueType == ValueType.STRING) {
+                    branchCovered(5, "createDecoderBranchCoverage.txt");
+                    return iter.readString();
+                } else if (valueType == ValueType.NUMBER) {
+                    branchCovered(6, "createDecoderBranchCoverage.txt");
+                    return iter.readNumberAsString();
+                } else if (valueType == ValueType.BOOLEAN) {
+                    branchCovered(7, "createDecoderBranchCoverage.txt");
+                    return iter.readBoolean() ? "true" : "false";
+                } else if (valueType == ValueType.NULL) {
+                    branchCovered(8, "createDecoderBranchCoverage.txt");
+                    iter.skip();
+                    return null;
+                } else {
+                    throw new JsonException("expect string, but found " + valueType);
+                }
+            }
+        };
+    }
+
+    private Decoder createDecoderBoolean() {
+        return new Decoder.BooleanDecoder() {
+            @Override
+            public boolean decodeBoolean(JsonIterator iter) throws IOException {
+                ValueType valueType = iter.whatIsNext();
+                if (valueType == ValueType.BOOLEAN) {
+                    branchCovered(10, "createDecoderBranchCoverage.txt");
+                    return iter.readBoolean();
+                } else if (valueType == ValueType.NULL) {
+                    branchCovered(11, "createDecoderBranchCoverage.txt");
+                    iter.skip();
+                    return false;
+                } else {
+                    throw new JsonException("expect boolean, but found " + valueType);
+                }
+            }
+        };
+    }
+
+    private Decoder createDecoderLong() {
+        return new Decoder.LongDecoder() {
+            @Override
+            public long decodeLong(JsonIterator iter) throws IOException {
+                ValueType valueType = iter.whatIsNext();
+                if (valueType == ValueType.NUMBER) {
+                    branchCovered(13, "createDecoderBranchCoverage.txt");
+                    return iter.readLong();
+                } else if (valueType == ValueType.NULL) {
+                    branchCovered(14, "createDecoderBranchCoverage.txt");
+                    iter.skip();
+                    return 0;
+                } else {
+                    throw new JsonException("expect long, but found " + valueType);
+                }
+            }
+        };
+    }
+
+    private Decoder createDecoderInt() {
+        return new Decoder.IntDecoder() {
+            @Override
+            public int decodeInt(JsonIterator iter) throws IOException {
+                ValueType valueType = iter.whatIsNext();
+                if (valueType == ValueType.NUMBER) {
+                    branchCovered(16, "createDecoderBranchCoverage.txt");
+                    return iter.readInt();
+                } else if (valueType == ValueType.NULL) {
+                    branchCovered(17, "createDecoderBranchCoverage.txt");
+                    iter.skip();
+                    return 0;
+                } else {
+                    throw new JsonException("expect int, but found " + valueType);
+                }
+            }
+        };
+    }
+
+    private Decoder createDecoderFloat() {
+        return new Decoder.FloatDecoder() {
+            @Override
+            public float decodeFloat(JsonIterator iter) throws IOException {
+                ValueType valueType = iter.whatIsNext();
+                if (valueType == ValueType.NUMBER) {
+                    branchCovered(19, "createDecoderBranchCoverage.txt");
+                    return iter.readFloat();
+                } else if (valueType == ValueType.NULL) {
+                    branchCovered(20, "createDecoderBranchCoverage.txt");
+                    iter.skip();
+                    return 0.0f;
+                } else {
+                    throw new JsonException("expect float, but found " + valueType);
+                }
+            }
+        };
+    }
+
+    private Decoder createDecoderDouble() {
+        return new Decoder.DoubleDecoder() {
+            @Override
+            public double decodeDouble(JsonIterator iter) throws IOException {
+                ValueType valueType = iter.whatIsNext();
+                if (valueType == ValueType.NUMBER) {
+                    branchCovered(22, "createDecoderBranchCoverage.txt");
+                    return iter.readDouble();
+                } else if (valueType == ValueType.NULL) {
+                    branchCovered(23, "createDecoderBranchCoverage.txt");
+                    iter.skip();
+                    return 0.0d;
+                } else {
+                    throw new JsonException("expect float, but found " + valueType);
+                }
+            }
+        };
+    }
     
     @Override
     public Decoder createDecoder(String cacheKey, Type type) {
         branchCovered(1, "createDecoderBranchCoverage.txt");
         if (Date.class == type) {
             branchCovered(2, "createDecoderBranchCoverage.txt");
-            return new Decoder() {
-                @Override
-                public Object decode(JsonIterator iter) throws IOException {
-                    DateFormat dateFormat = builder().dateFormat.get();
-                    try {
-                        branchCovered(3, "createDecoderBranchCoverage.txt");
-                        String input = iter.readString();
-                        return dateFormat.parse(input);
-                    } catch (ParseException e) {
-                        throw new JsonException(e);
-                    }
-                }
-            };
+            return createDecoderDate();
         } else if (String.class == type) {
             branchCovered(4, "createDecoderBranchCoverage.txt");
-            return new Decoder() {
-                @Override
-                public Object decode(JsonIterator iter) throws IOException {
-                    ValueType valueType = iter.whatIsNext();
-                    if (valueType == ValueType.STRING) {
-                        branchCovered(5, "createDecoderBranchCoverage.txt");
-                        return iter.readString();
-                    } else if (valueType == ValueType.NUMBER) {
-                        branchCovered(6, "createDecoderBranchCoverage.txt");
-                        return iter.readNumberAsString();
-                    } else if (valueType == ValueType.BOOLEAN) {
-                        branchCovered(7, "createDecoderBranchCoverage.txt");
-                        return iter.readBoolean() ? "true" : "false";
-                    } else if (valueType == ValueType.NULL) {
-                        branchCovered(8, "createDecoderBranchCoverage.txt");
-                        iter.skip();
-                        return null;
-                    } else {
-                        throw new JsonException("expect string, but found " + valueType);
-                    }
-                }
-            };
+            return createDecoderString();
         } else if (boolean.class == type) {
             branchCovered(9, "createDecoderBranchCoverage.txt");
-            return new Decoder.BooleanDecoder() {
-                @Override
-                public boolean decodeBoolean(JsonIterator iter) throws IOException {
-                    ValueType valueType = iter.whatIsNext();
-                    if (valueType == ValueType.BOOLEAN) {
-                        branchCovered(10, "createDecoderBranchCoverage.txt");
-                        return iter.readBoolean();
-                    } else if (valueType == ValueType.NULL) {
-                        branchCovered(11, "createDecoderBranchCoverage.txt");
-                        iter.skip();
-                        return false;
-                    } else {
-                        throw new JsonException("expect boolean, but found " + valueType);
-                    }
-                }
-            };
+            return createDecoderBoolean();
         } else if (long.class == type) {
             branchCovered(12, "createDecoderBranchCoverage.txt");
-            return new Decoder.LongDecoder() {
-                @Override
-                public long decodeLong(JsonIterator iter) throws IOException {
-                    ValueType valueType = iter.whatIsNext();
-                    if (valueType == ValueType.NUMBER) {
-                        branchCovered(13, "createDecoderBranchCoverage.txt");
-                        return iter.readLong();
-                    } else if (valueType == ValueType.NULL) {
-                        branchCovered(14, "createDecoderBranchCoverage.txt");
-                        iter.skip();
-                        return 0;
-                    } else {
-                        throw new JsonException("expect long, but found " + valueType);
-                    }
-                }
-            };
+            return createDecoderLong();
         } else if (int.class == type) {
             branchCovered(15, "createDecoderBranchCoverage.txt");
-            return new Decoder.IntDecoder() {
-                @Override
-                public int decodeInt(JsonIterator iter) throws IOException {
-                    ValueType valueType = iter.whatIsNext();
-                    if (valueType == ValueType.NUMBER) {
-                        branchCovered(16, "createDecoderBranchCoverage.txt");
-                        return iter.readInt();
-                    } else if (valueType == ValueType.NULL) {
-                        branchCovered(17, "createDecoderBranchCoverage.txt");
-                        iter.skip();
-                        return 0;
-                    } else {
-                        throw new JsonException("expect int, but found " + valueType);
-                    }
-                }
-            };
+            return createDecoderInt();
         } else if (float.class == type) {
             branchCovered(18, "createDecoderBranchCoverage.txt");
-            return new Decoder.FloatDecoder() {
-                @Override
-                public float decodeFloat(JsonIterator iter) throws IOException {
-                    ValueType valueType = iter.whatIsNext();
-                    if (valueType == ValueType.NUMBER) {
-                        branchCovered(19, "createDecoderBranchCoverage.txt");
-                        return iter.readFloat();
-                    } else if (valueType == ValueType.NULL) {
-                        branchCovered(20, "createDecoderBranchCoverage.txt");
-                        iter.skip();
-                        return 0.0f;
-                    } else {
-                        throw new JsonException("expect float, but found " + valueType);
-                    }
-                }
-            };
+            return createDecoderFloat();
         } else if (double.class == type) {
             branchCovered(21, "createDecoderBranchCoverage.txt");
-            return new Decoder.DoubleDecoder() {
-                @Override
-                public double decodeDouble(JsonIterator iter) throws IOException {
-                    ValueType valueType = iter.whatIsNext();
-                    if (valueType == ValueType.NUMBER) {
-                        branchCovered(22, "createDecoderBranchCoverage.txt");
-                        return iter.readDouble();
-                    } else if (valueType == ValueType.NULL) {
-                        branchCovered(23, "createDecoderBranchCoverage.txt");
-                        iter.skip();
-                        return 0.0d;
-                    } else {
-                        throw new JsonException("expect float, but found " + valueType);
-                    }
-                }
-            };
+            return createDecoderDouble();
         }
         return super.createDecoder(cacheKey, type);
     }
