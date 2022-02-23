@@ -592,45 +592,6 @@ class IterImplForStreaming {
         }
     }
 
-    public static int byteToBranchID(byte c){
-        switch (c) {
-            case '.':
-                return 4;
-            case 'e':
-                return 5;
-            case 'E':
-                return 6;
-            case '-':
-                return 7;
-            case '+':
-                return 8;
-            case '0':
-                return 9;
-            case '1':
-                return 10;
-            case '2':
-                return 11;
-            case '3':
-                return 12;
-            case '4':
-                return 13;
-            case '5':
-                return 14;
-            case '6':
-                return 15;
-            case '7':
-                return 16;
-            case '8':
-                return 17;
-            case '9':
-                return 18;
-            default:
-                return 40;
-        }
-
-    }
-
-
     public static final numberChars readNumber(final JsonIterator iter) throws IOException {
         int j = 0;
         boolean dotFound = false;
