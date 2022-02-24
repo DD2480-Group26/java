@@ -231,6 +231,15 @@ class IterImpl {
             bw.close();
         }
         try {
+            //New branch id
+        	branchId = 1;
+        	line = "Branch "+branchId+" tested";
+            if(!FileMethods.fileContains(fileName, line)) {
+            	bw = new BufferedWriter(logWriter);
+            	bw.write(line);
+                bw.newLine();
+                bw.close();
+            }
             boolean isExpectingLowSurrogate = false;
             for (int i = iter.head; i < iter.tail; ) {
                 int bc = iter.buf[i++];
