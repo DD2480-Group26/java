@@ -1,0 +1,23 @@
+Test for function readNumber:
+- Branch 1 tested times: 27
+- Branch 2 tested times: 316
+- Branch 3 tested times: 0
+- Branch 4 tested times: 316
+- Branch 5 tested times: 30
+- Branch 6 tested times: 6
+- Branch 7 tested times: 2
+- Branch 8 tested times: 2
+- Branch 9 tested times: 1
+- Branch 10 tested times: 32
+- Branch 11 tested times: 13
+- Branch 12 tested times: 30
+- Branch 13 tested times: 35
+- Branch 14 tested times: 14
+- Branch 15 tested times: 31
+- Branch 16 tested times: 15
+- Branch 17 tested times: 57
+- Branch 18 tested times: 32
+- Branch 19 tested times: 14
+- Branch 20 tested times: 21
+- Branch 21 tested times: 6
+- Branch 22 tested times: 0

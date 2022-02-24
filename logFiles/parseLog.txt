@@ -1,0 +1,20 @@
+Test for function parse:
+- Branch 1 tested times: 6
+- Branch 2 tested times: 11
+- Branch 3 tested times: 2
+- Branch 4 tested times: 2
+- Branch 5 tested times: 2
+- Branch 6 tested times: 2
+- Branch 7 tested times: 2
+- Branch 8 tested times: 2
+- Branch 9 tested times: 2
+- Branch 10 tested times: 2
+- Branch 11 tested times: 2
+- Branch 12 tested times: 2
+- Branch 13 tested times: 2
+- Branch 14 tested times: 2
+- Branch 15 tested times: 2
+- Branch 16 tested times: 2
+- Branch 17 tested times: 2
+- Branch 18 tested times: 2
+- Branch 19 tested times: 0
