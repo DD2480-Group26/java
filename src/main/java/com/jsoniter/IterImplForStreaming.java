@@ -1,6 +1,7 @@
 package com.jsoniter;
 
 import com.jsoniter.any.Any;
+import com.jsoniter.group26logger.BranchCoverage;
 import com.jsoniter.spi.JsonException;
 import com.jsoniter.spi.Slice;
 
@@ -568,21 +569,66 @@ class IterImplForStreaming {
         boolean dotFound;
     }
 
+    public static int byteToBranchID(byte c){
+        switch (c) {
+            case '.':
+                return 5;
+            case 'e':
+                return 6;
+            case 'E':
+                return 7;
+            case '-':
+                return 8;
+            case '+':
+                return 9;
+            case '0':
+                return 10;
+            case '1':
+                return 11;
+            case '2':
+                return 12;
+            case '3':
+                return 13;
+            case '4':
+                return 14;
+            case '5':
+                return 15;
+            case '6':
+                return 16;
+            case '7':
+                return 17;
+            case '8':
+                return 18;
+            case '9':
+                return 19;
+            default:
+                return 41;
+        }
+
+    }
+
     public static final numberChars readNumber(final JsonIterator iter) throws IOException {
+        Integer functionIndex = BranchCoverage.createFile("readNumber", 22);
         int j = 0;
         boolean dotFound = false;
         for (; ; ) {
+            BranchCoverage.addBranch(1, functionIndex);
             for (int i = iter.head; i < iter.tail; i++) {
+                BranchCoverage.addBranch(2, functionIndex);
                 if (j == iter.reusableChars.length) {
+                    BranchCoverage.addBranch(3, functionIndex);
                     char[] newBuf = new char[iter.reusableChars.length * 2];
                     System.arraycopy(iter.reusableChars, 0, newBuf, 0, iter.reusableChars.length);
                     iter.reusableChars = newBuf;
+                } else {
+                    BranchCoverage.addBranch(4, functionIndex);
                 }
                 byte c = iter.buf[i];
                 switch (c) {
                     case '.':
                     case 'e':
                     case 'E':
+                    BranchCoverage.addBranch(byteToBranchID(c), functionIndex);
                         dotFound = true;
                         // fallthrough
                     case '-':
@@ -597,9 +643,11 @@ class IterImplForStreaming {
                     case '7':
                     case '8':
                     case '9':
+                    BranchCoverage.addBranch(byteToBranchID(c), functionIndex);
                         iter.reusableChars[j++] = (char) c;
                         break;
                     default:
+                    BranchCoverage.addBranch(20, functionIndex);
                         iter.head = i;
                         numberChars numberChars = new numberChars();
                         numberChars.chars = iter.reusableChars;
@@ -609,12 +657,15 @@ class IterImplForStreaming {
                 }
             }
             if (!IterImpl.loadMore(iter)) {
+                BranchCoverage.addBranch(21, functionIndex);
                 iter.head = iter.tail;
                 numberChars numberChars = new numberChars();
                 numberChars.chars = iter.reusableChars;
                 numberChars.charsLength = j;
                 numberChars.dotFound = dotFound;
                 return numberChars;
+            } else {
+                BranchCoverage.addBranch(22, functionIndex);
             }
         }
     }

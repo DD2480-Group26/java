@@ -12,6 +12,7 @@ import com.jsoniter.JsonIterator;
 import com.jsoniter.ValueType;
 import com.jsoniter.annotation.JsonIgnore;
 import com.jsoniter.annotation.JsonProperty;
+import com.jsoniter.group26logger.BranchCoverage;
 import com.jsoniter.output.JsonStream;
 import com.jsoniter.spi.*;
 
@@ -333,113 +334,146 @@ public class GsonCompatibilityMode extends Config {
 
     @Override
     public Decoder createDecoder(String cacheKey, Type type) {
+        Integer functionIndex = BranchCoverage.createFile("createDecoder", 31); 
+        BranchCoverage.addBranch(1, functionIndex);
         if (Date.class == type) {
+            BranchCoverage.addBranch(2, functionIndex);
             return new Decoder() {
                 @Override
                 public Object decode(JsonIterator iter) throws IOException {
                     DateFormat dateFormat = builder().dateFormat.get();
                     try {
+                        BranchCoverage.addBranch(3, BranchCoverage.getFunctionIndex("createDecoder"));
                         String input = iter.readString();
                         return dateFormat.parse(input);
                     } catch (ParseException e) {
+                        BranchCoverage.addBranch(4, BranchCoverage.getFunctionIndex("createDecoder"));
                         throw new JsonException(e);
                     }
                 }
             };
         } else if (String.class == type) {
+            BranchCoverage.addBranch(5, functionIndex);
             return new Decoder() {
                 @Override
                 public Object decode(JsonIterator iter) throws IOException {
                     ValueType valueType = iter.whatIsNext();
                     if (valueType == ValueType.STRING) {
+                        BranchCoverage.addBranch(6, BranchCoverage.getFunctionIndex("createDecoder"));
                         return iter.readString();
                     } else if (valueType == ValueType.NUMBER) {
+                        BranchCoverage.addBranch(7, BranchCoverage.getFunctionIndex("createDecoder"));
                         return iter.readNumberAsString();
                     } else if (valueType == ValueType.BOOLEAN) {
+                        BranchCoverage.addBranch(8, BranchCoverage.getFunctionIndex("createDecoder"));
                         return iter.readBoolean() ? "true" : "false";
                     } else if (valueType == ValueType.NULL) {
+                        BranchCoverage.addBranch(9, BranchCoverage.getFunctionIndex("createDecoder"));
                         iter.skip();
                         return null;
                     } else {
+                        BranchCoverage.addBranch(10, BranchCoverage.getFunctionIndex("createDecoder"));
                         throw new JsonException("expect string, but found " + valueType);
                     }
                 }
             };
         } else if (boolean.class == type) {
+            BranchCoverage.addBranch(11, functionIndex);
             return new Decoder.BooleanDecoder() {
                 @Override
                 public boolean decodeBoolean(JsonIterator iter) throws IOException {
                     ValueType valueType = iter.whatIsNext();
                     if (valueType == ValueType.BOOLEAN) {
+                        BranchCoverage.addBranch(12, BranchCoverage.getFunctionIndex("createDecoder"));
                         return iter.readBoolean();
                     } else if (valueType == ValueType.NULL) {
+                        BranchCoverage.addBranch(13, BranchCoverage.getFunctionIndex("createDecoder"));
                         iter.skip();
                         return false;
                     } else {
+                        BranchCoverage.addBranch(14, BranchCoverage.getFunctionIndex("createDecoder"));
                         throw new JsonException("expect boolean, but found " + valueType);
                     }
                 }
             };
         } else if (long.class == type) {
+            BranchCoverage.addBranch(15, functionIndex);
             return new Decoder.LongDecoder() {
                 @Override
                 public long decodeLong(JsonIterator iter) throws IOException {
                     ValueType valueType = iter.whatIsNext();
                     if (valueType == ValueType.NUMBER) {
+                        BranchCoverage.addBranch(16, BranchCoverage.getFunctionIndex("createDecoder"));
                         return iter.readLong();
                     } else if (valueType == ValueType.NULL) {
+                        BranchCoverage.addBranch(17, BranchCoverage.getFunctionIndex("createDecoder"));
                         iter.skip();
                         return 0;
                     } else {
+                        BranchCoverage.addBranch(18, BranchCoverage.getFunctionIndex("createDecoder"));
                         throw new JsonException("expect long, but found " + valueType);
                     }
                 }
             };
         } else if (int.class == type) {
+            BranchCoverage.addBranch(19, functionIndex);
             return new Decoder.IntDecoder() {
                 @Override
                 public int decodeInt(JsonIterator iter) throws IOException {
                     ValueType valueType = iter.whatIsNext();
                     if (valueType == ValueType.NUMBER) {
+                        BranchCoverage.addBranch(20, BranchCoverage.getFunctionIndex("createDecoder"));
                         return iter.readInt();
                     } else if (valueType == ValueType.NULL) {
+                        BranchCoverage.addBranch(21, BranchCoverage.getFunctionIndex("createDecoder"));
                         iter.skip();
                         return 0;
                     } else {
+                        BranchCoverage.addBranch(22, BranchCoverage.getFunctionIndex("createDecoder"));
                         throw new JsonException("expect int, but found " + valueType);
                     }
                 }
             };
         } else if (float.class == type) {
+            BranchCoverage.addBranch(23, functionIndex);
             return new Decoder.FloatDecoder() {
                 @Override
                 public float decodeFloat(JsonIterator iter) throws IOException {
                     ValueType valueType = iter.whatIsNext();
                     if (valueType == ValueType.NUMBER) {
+                        BranchCoverage.addBranch(24, BranchCoverage.getFunctionIndex("createDecoder"));
                         return iter.readFloat();
                     } else if (valueType == ValueType.NULL) {
+                        BranchCoverage.addBranch(25, BranchCoverage.getFunctionIndex("createDecoder"));
                         iter.skip();
                         return 0.0f;
                     } else {
+                        BranchCoverage.addBranch(26, BranchCoverage.getFunctionIndex("createDecoder"));
                         throw new JsonException("expect float, but found " + valueType);
                     }
                 }
             };
         } else if (double.class == type) {
+            BranchCoverage.addBranch(27, functionIndex);
             return new Decoder.DoubleDecoder() {
                 @Override
                 public double decodeDouble(JsonIterator iter) throws IOException {
                     ValueType valueType = iter.whatIsNext();
                     if (valueType == ValueType.NUMBER) {
+                        BranchCoverage.addBranch(28, BranchCoverage.getFunctionIndex("createDecoder"));
                         return iter.readDouble();
                     } else if (valueType == ValueType.NULL) {
+                        BranchCoverage.addBranch(29, BranchCoverage.getFunctionIndex("createDecoder"));
                         iter.skip();
                         return 0.0d;
                     } else {
+                        BranchCoverage.addBranch(30, BranchCoverage.getFunctionIndex("createDecoder"));
                         throw new JsonException("expect float, but found " + valueType);
                     }
                 }
             };
+        } else {
+            BranchCoverage.addBranch(31, functionIndex);
         }
         return super.createDecoder(cacheKey, type);
     }

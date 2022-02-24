@@ -1,6 +1,7 @@
 package com.jsoniter;
 
 import com.jsoniter.any.Any;
+import com.jsoniter.group26logger.BranchCoverage;
 import com.jsoniter.spi.JsonException;
 import com.jsoniter.spi.Slice;
 
@@ -215,56 +216,79 @@ class IterImpl {
     }
 
     public final static int readStringSlowPath(JsonIterator iter, int j) throws IOException {
+        Integer functionIndex = BranchCoverage.createFile("readStringSlowPath", 38);
         try {
+            BranchCoverage.addBranch(1, functionIndex);
             boolean isExpectingLowSurrogate = false;
             for (int i = iter.head; i < iter.tail; ) {
                 int bc = iter.buf[i++];
                 if (bc == '"') {
+                    BranchCoverage.addBranch(2, functionIndex);
                     iter.head = i;
                     return j;
+                } else {
+                    BranchCoverage.addBranch(3, functionIndex);
                 }
                 if (bc == '\\') {
+                    BranchCoverage.addBranch(4, functionIndex);
                     bc = iter.buf[i++];
                     switch (bc) {
                         case 'b':
+                        BranchCoverage.addBranch(5, functionIndex);
                             bc = '\b';
                             break;
                         case 't':
+                        BranchCoverage.addBranch(6, functionIndex);
                             bc = '\t';
                             break;
                         case 'n':
+                        BranchCoverage.addBranch(7, functionIndex);
                             bc = '\n';
                             break;
                         case 'f':
+                        BranchCoverage.addBranch(8, functionIndex);
                             bc = '\f';
                             break;
                         case 'r':
+                        BranchCoverage.addBranch(9, functionIndex);
                             bc = '\r';
                             break;
                         case '"':
                         case '/':
                         case '\\':
+                        BranchCoverage.addBranch(10, functionIndex);
                             break;
                         case 'u':
+                        BranchCoverage.addBranch(11, functionIndex);
                             bc = (IterImplString.translateHex(iter.buf[i++]) << 12) +
                                     (IterImplString.translateHex(iter.buf[i++]) << 8) +
                                     (IterImplString.translateHex(iter.buf[i++]) << 4) +
                                     IterImplString.translateHex(iter.buf[i++]);
                             if (Character.isHighSurrogate((char) bc)) {
+                                BranchCoverage.addBranch(12, functionIndex);
                                 if (isExpectingLowSurrogate) {
+                                    BranchCoverage.addBranch(13, functionIndex);
                                     throw new JsonException("invalid surrogate");
                                 } else {
+                                    BranchCoverage.addBranch(14, functionIndex);
                                     isExpectingLowSurrogate = true;
                                 }
                             } else if (Character.isLowSurrogate((char) bc)) {
+                                BranchCoverage.addBranch(15, functionIndex);
                                 if (isExpectingLowSurrogate) {
+                                    BranchCoverage.addBranch(16, functionIndex);
                                     isExpectingLowSurrogate = false;
                                 } else {
+                                    BranchCoverage.addBranch(17, functionIndex);
                                     throw new JsonException("invalid surrogate");
                                 }
                             } else {
+                                BranchCoverage.addBranch(18, functionIndex);
                                 if (isExpectingLowSurrogate) {
+                                    BranchCoverage.addBranch(19, functionIndex);
                                     throw new JsonException("invalid surrogate");
+                                } else {
+                                    BranchCoverage.addBranch(20, functionIndex);
                                 }
                             }
                             break;
@@ -273,54 +297,79 @@ class IterImpl {
                             throw iter.reportError("readStringSlowPath", "invalid escape character: " + bc);
                     }
                 } else if ((bc & 0x80) != 0) {
+                    BranchCoverage.addBranch(21, functionIndex);
                     final int u2 = iter.buf[i++];
                     if ((bc & 0xE0) == 0xC0) {
+                        BranchCoverage.addBranch(22, functionIndex);
                         bc = ((bc & 0x1F) << 6) + (u2 & 0x3F);
                     } else {
+                        BranchCoverage.addBranch(23, functionIndex);
                         final int u3 = iter.buf[i++];
                         if ((bc & 0xF0) == 0xE0) {
+                            BranchCoverage.addBranch(24, functionIndex);
                             bc = ((bc & 0x0F) << 12) + ((u2 & 0x3F) << 6) + (u3 & 0x3F);
                         } else {
+                            BranchCoverage.addBranch(25, functionIndex);
                             final int u4 = iter.buf[i++];
                             if ((bc & 0xF8) == 0xF0) {
+                                BranchCoverage.addBranch(26, functionIndex);
                                 bc = ((bc & 0x07) << 18) + ((u2 & 0x3F) << 12) + ((u3 & 0x3F) << 6) + (u4 & 0x3F);
                             } else {
+                                BranchCoverage.addBranch(27, functionIndex);
                                 throw iter.reportError("readStringSlowPath", "invalid unicode character");
                             }
 
                             if (bc >= 0x10000) {
+                                BranchCoverage.addBranch(28, functionIndex);
                                 // check if valid unicode
-                                if (bc >= 0x110000)
+                                if (bc >= 0x110000){
+                                    BranchCoverage.addBranch(29, functionIndex);
                                     throw iter.reportError("readStringSlowPath", "invalid unicode character");
-
+                                } else {
+                                    BranchCoverage.addBranch(30, functionIndex);
+                                }
                                 // split surrogates
                                 final int sup = bc - 0x10000;
                                 if (iter.reusableChars.length == j) {
+                                    BranchCoverage.addBranch(31, functionIndex);
                                     char[] newBuf = new char[iter.reusableChars.length * 2];
                                     System.arraycopy(iter.reusableChars, 0, newBuf, 0, iter.reusableChars.length);
                                     iter.reusableChars = newBuf;
+                                } else {
+                                    BranchCoverage.addBranch(32, functionIndex);
                                 }
                                 iter.reusableChars[j++] = (char) ((sup >>> 10) + 0xd800);
                                 if (iter.reusableChars.length == j) {
+                                    BranchCoverage.addBranch(33, functionIndex);
                                     char[] newBuf = new char[iter.reusableChars.length * 2];
                                     System.arraycopy(iter.reusableChars, 0, newBuf, 0, iter.reusableChars.length);
                                     iter.reusableChars = newBuf;
+                                } else {
+                                    BranchCoverage.addBranch(34, functionIndex);
                                 }
                                 iter.reusableChars[j++] = (char) ((sup & 0x3ff) + 0xdc00);
                                 continue;
+                            } else {
+                                BranchCoverage.addBranch(35, functionIndex);
                             }
                         }
                     }
+                } else {
+                    BranchCoverage.addBranch(36, functionIndex);
                 }
                 if (iter.reusableChars.length == j) {
+                    BranchCoverage.addBranch(36, functionIndex);
                     char[] newBuf = new char[iter.reusableChars.length * 2];
                     System.arraycopy(iter.reusableChars, 0, newBuf, 0, iter.reusableChars.length);
                     iter.reusableChars = newBuf;
+                } else {
+                    BranchCoverage.addBranch(37, functionIndex);
                 }
                 iter.reusableChars[j++] = (char) bc;
             }
             throw iter.reportError("readStringSlowPath", "incomplete string");
         } catch (IndexOutOfBoundsException e) {
+            BranchCoverage.addBranch(38, functionIndex);
             throw iter.reportError("readString", "incomplete string");
         }
     }
