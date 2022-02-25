@@ -146,4 +146,20 @@ public class TestOmitValue extends TestCase {
 
         assertEquals(null, retval);
     }
+
+    public void testParse2(){
+
+
+        final Null objectUnderTest = new Null();
+        final Object val = null;
+
+        String defaultValueToOmit = "null";
+
+
+        final OmitValue parse = Parsed.parse((Type) val,defaultValueToOmit);
+        final boolean retval = parse.shouldOmit(val);
+
+
+        assertEquals(true,retval);
+    }
 }
