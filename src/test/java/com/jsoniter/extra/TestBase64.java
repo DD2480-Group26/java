@@ -34,4 +34,16 @@ public class TestBase64 extends TestCase {
     public void test_decode_last_1_to_3_bytes() {
     	assertEquals("~;", new String(JsonIterator.deserialize("\"fjs\"", byte[].class)));    	
     }
+    
+    public void test_two_equals() {
+    	assertEquals("abcd", new String(JsonIterator.deserialize("\"YWJjZA==\"", byte[].class)));    	
+    }
+    
+    public void test_one_equals() {
+    	assertEquals("abcde", new String(JsonIterator.deserialize("\"YWJjZGU=\"", byte[].class)));    	
+    }
+    
+    public void test_more_than_76_bytes() {
+    	assertEquals("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", new String(JsonIterator.deserialize("\"YWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFh\"", byte[].class)));    	
+    }
 }
