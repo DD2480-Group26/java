@@ -23,7 +23,7 @@ public class TestIterImpl extends TestCase{
 	}
 	
 	/*Contract:
-	 * Here we are testing the buffer "\\n""
+	 * Here we are testing the buffer "\\r""
 	 * This buffer should go through the loop once and increase 
 	 * j by one
 	 * Expected output: j++
@@ -35,13 +35,13 @@ public class TestIterImpl extends TestCase{
 		iter.tail = 10;
 		iter.buf = new byte[3];
 		iter.buf[0]='\\';
-		iter.buf[1]='n';
+		iter.buf[1]='r';
 		iter.buf[2] = '"';	
 		assertEquals(IterImpl.readStringSlowPath(iter, j),++j);	
 	}
 	
 	/*Contract:
-	 * Here we are testing the buffer "\\t""
+	 * Here we are testing the buffer "\\n""
 	 * This buffer should go through the loop once and increase 
 	 * j by one
 	 * Expected output: j++
@@ -53,7 +53,7 @@ public class TestIterImpl extends TestCase{
 		iter.tail = 10;
 		iter.buf = new byte[3];
 		iter.buf[0]='\\';
-		iter.buf[1]='t';
+		iter.buf[1]='n';
 		iter.buf[2] = '"';
 		assertEquals(IterImpl.readStringSlowPath(iter, j),++j);			
 	}
